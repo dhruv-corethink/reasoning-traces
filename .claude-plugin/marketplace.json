@@ -1,0 +1,16 @@
+{
+  "name": "corethink",
+  "description": "Corethink tools for Claude Code — starting with Reasoning Traces, a stronger-reasoning-model oracle.",
+  "owner": {
+    "name": "Dhruv",
+    "email": "dhruv@corethink.ai"
+  },
+  "plugins": [
+    {
+      "name": "reasoning-traces",
+      "source": "./",
+      "description": "Consult a stronger reasoning model mid-task and use its reasoning trace to improve answers.",
+      "version": "0.1.0"
+    }
+  ]
+}

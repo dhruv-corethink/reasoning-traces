@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__reasoning-traces__deep_reasoning"
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "reasoning-traces": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": ["--from", "${CLAUDE_PROJECT_DIR}", "reasoning-traces"],
+      "timeout": 600000
+    }
+  }
+}
