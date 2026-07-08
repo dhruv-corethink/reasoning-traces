@@ -35,7 +35,7 @@ class OpenRouterBackend:
                 "and export it in your shell (or put it in a .env file in "
                 "your project directory)."
             )
-        self.model = os.environ.get("REASONING_MODEL", "deepseek/deepseek-r1-0528")
+        self.model = os.environ.get("REASONING_MODEL", "anthropic/claude-opus-4.8")
         self.effort = os.environ.get("REASONING_EFFORT", "high")
         self.max_tokens = int(os.environ.get("REASONING_MAX_TOKENS", "32000"))
         self.client = httpx.Client(

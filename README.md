@@ -4,7 +4,7 @@
 
 Reasoning Traces is an MCP server + Claude Code plugin. It adds a `deep_reasoning` tool: the agent sends a hard problem (plus the code and context it has gathered) to a stronger reasoning model, gets back the model's **full reasoning trace**, and uses that trace to shape and cross-check its own answer.
 
-Works out of the box with reasoning models on [OpenRouter](https://openrouter.ai) (default: DeepSeek R1, which returns its complete raw chain of thought). Anthropic and custom backends included.
+Works out of the box with reasoning models on [OpenRouter](https://openrouter.ai) (default: Claude Opus 4.8; one env var switches to DeepSeek R1 for full raw chain-of-thought traces, o3, Gemini, or any other slug). Anthropic and custom backends included.
 
 ## Install (Claude Code)
 
@@ -63,12 +63,12 @@ Set env vars in your shell, or per-project in a `.env` file (the server loads `.
 |---|---|---|
 | `OPENROUTER_API_KEY` | — | Required for the default backend |
 | `REASONING_BACKEND` | `openrouter` | `openrouter`, `anthropic`, or `corethink` |
-| `REASONING_MODEL` | `deepseek/deepseek-r1-0528` | Any OpenRouter model slug (e.g. `openai/o3`, `google/gemini-2.5-pro`); `claude-opus-4-8` for the anthropic backend |
+| `REASONING_MODEL` | `anthropic/claude-opus-4.8` | Any OpenRouter model slug (e.g. `deepseek/deepseek-r1-0528`, `openai/o3`); `claude-opus-4-8` for the anthropic backend |
 | `REASONING_EFFORT` | `high` | openrouter: `low`/`medium`/`high`; anthropic: up to `xhigh`/`max` |
 | `REASONING_MAX_TOKENS` | `32000` | Output cap for the reasoning call |
 | `REASONING_MAX_RESULT_CHARS` | `32000` | Truncation cap on the tool result |
 
-DeepSeek R1 is the default because it returns its full raw reasoning trace; most other models (o3, Gemini) return summaries.
+Claude Opus 4.8 is the default. Note: Anthropic models (and o3/Gemini) return **summarized** reasoning; for a full raw chain of thought, set `REASONING_MODEL=deepseek/deepseek-r1-0528`.
 
 ## Other MCP clients
 

@@ -1,6 +1,6 @@
 {
   "name": "reasoning-traces",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Consult a stronger reasoning model mid-task and use its reasoning trace to improve answers. Adds the deep_reasoning MCP tool and a /reason command.",
   "author": {
     "name": "Dhruv",
