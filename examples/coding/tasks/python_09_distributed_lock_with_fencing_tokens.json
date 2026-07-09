@@ -1,0 +1,13 @@
+{
+  "id": "python_09_distributed_lock_with_fencing_tokens",
+  "title": "Distributed Lock with Fencing Tokens",
+  "category": "Python / systems coding",
+  "prompt": "Implement a distributed lock using Redis. Clients may crash or experience network delays while holding locks. Prevent stale lock holders from performing writes using fencing tokens or similar techniques, and ensure lock ownership is unambiguous.",
+  "reference": "",
+  "rubric": [
+    "Implements every explicit requirement named in the prompt",
+    "Correctly handles the hard cases the prompt calls out (concurrency, crashes, duplicates, ordering, recovery, etc.)",
+    "Code is complete and coherent enough to run, not pseudocode or stubs",
+    "No correctness bugs in the core algorithm or data structures"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "frontend_04_performance_optimization",
+  "title": "Performance Optimization",
+  "category": "Frontend (React/Tailwind)",
+  "prompt": "Build a fully accessible dropdown navigation menu and modal component using React and Tailwind v3, including keyboard navigation, ARIA roles, focus trapping, and screen reader support.",
+  "reference": "",
+  "rubric": [
+    "Implements all requested UI elements and behaviors from the prompt",
+    "Uses the requested stack correctly (React, Tailwind v3, hooks, etc.)",
+    "Handles the specific concerns named (responsiveness, performance, a11y, error states)",
+    "Code is complete and structured, not a fragment"
+  ]
+}

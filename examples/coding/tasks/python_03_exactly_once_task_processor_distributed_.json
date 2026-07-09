@@ -1,0 +1,13 @@
+{
+  "id": "python_03_exactly_once_task_processor_distributed_",
+  "title": "Exactly-Once Task Processor (Distributed Systems)",
+  "category": "Python / systems coding",
+  "prompt": "Implement a distributed task processor in Python using Redis. Multiple workers consume tasks concurrently, tasks may be delivered more than once, and workers may crash mid-execution. Each task must be executed exactly once. Handle duplicate deliveries, worker crashes, and safely retry stuck tasks without duplicating side effects.",
+  "reference": "",
+  "rubric": [
+    "Implements every explicit requirement named in the prompt",
+    "Correctly handles the hard cases the prompt calls out (concurrency, crashes, duplicates, ordering, recovery, etc.)",
+    "Code is complete and coherent enough to run, not pseudocode or stubs",
+    "No correctness bugs in the core algorithm or data structures"
+  ]
+}

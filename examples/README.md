@@ -7,7 +7,12 @@ Each demo runs the same base model **twice** per task:
 - **WITHOUT** — the base model answers alone.
 - **WITH** — the base model answers after receiving the reasoning trace from Reasoning Traces' `deep_reasoning` tool (the plugin's real behavior).
 
-A neutral judge (a different model family) then scores both answers **blind and pairwise** against a fixed reference answer.
+A neutral judge (a different model family) then scores both answers **blind and pairwise**.
+
+## Demos
+
+- **[Salesforce demo](#salesforce-demo)** — five Salesforce/Apex problems judged against fixed reference answers.
+- **[Coding demo](coding/)** — reasoning-heavy systems-coding + frontend tasks (distributed locks, CRDTs, streaming joins, …) judged against each task's own requirements. `/reason` won 6/6, avg **1.7 → 4.5**.
 
 ## Salesforce demo
 

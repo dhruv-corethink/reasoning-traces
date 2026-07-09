@@ -1,0 +1,13 @@
+{
+  "id": "python_06_streaming_join_engine",
+  "title": "Streaming Join Engine",
+  "category": "Python / systems coding",
+  "prompt": "Build a streaming join engine in Python. Two event streams arrive asynchronously and must be joined by key within a time window. Handle out-of-order events, duplicate events, and late arrivals, and prevent unbounded memory growth by safely evicting old state.",
+  "reference": "",
+  "rubric": [
+    "Implements every explicit requirement named in the prompt",
+    "Correctly handles the hard cases the prompt calls out (concurrency, crashes, duplicates, ordering, recovery, etc.)",
+    "Code is complete and coherent enough to run, not pseudocode or stubs",
+    "No correctness bugs in the core algorithm or data structures"
+  ]
+}

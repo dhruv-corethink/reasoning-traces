@@ -1,0 +1,13 @@
+{
+  "id": "python_13_crdt_for_collaborative_text_editing",
+  "title": "CRDT for Collaborative Text Editing",
+  "category": "Python / systems coding",
+  "prompt": "Implement a Conflict-Free Replicated Data Type (CRDT) for text editing. Support concurrent inserts and deletes across replicas without coordination. Ensure convergence, preserve user intent, and guarantee deterministic merges.",
+  "reference": "",
+  "rubric": [
+    "Implements every explicit requirement named in the prompt",
+    "Correctly handles the hard cases the prompt calls out (concurrency, crashes, duplicates, ordering, recovery, etc.)",
+    "Code is complete and coherent enough to run, not pseudocode or stubs",
+    "No correctness bugs in the core algorithm or data structures"
+  ]
+}
