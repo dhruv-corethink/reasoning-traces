@@ -10,7 +10,7 @@
       "name": "reasoning-traces",
       "source": "./",
       "description": "Consult a stronger reasoning model mid-task and use its reasoning trace to improve answers.",
-      "version": "0.1.1"
+      "version": "0.2.0"
     }
   ]
 }

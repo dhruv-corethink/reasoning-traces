@@ -116,22 +116,62 @@ class AnthropicBackend:
 
 
 class CorethinkBackend:
-    """Stub for the Corethink reasoning model.
+    """The CoreThink reasoning endpoint.
 
-    Implement the API call in reason(): send `prompt` to the model, then
-    return ReasoningResult(trace=<its reasoning trace>,
-    conclusion=<its final answer>).
+    Calls the CoreThink proxy (hosted on Cloud Run), which holds the upstream
+    provider URL, model, and key server-side. The client only needs a
+    CoreThink API key — export CORETHINK_API_KEY and go. The reasoning model
+    is selected server-side (Claude Opus 4.8 by default). Its reasoning arrives
+    either as a `reasoning` field or inline as <think>...</think>; this backend
+    handles both, splitting the trace from the final conclusion.
     """
 
+    DEFAULT_BASE_URL = "https://corethink-reason-proxy-xfsavzevuq-uc.a.run.app"
+
     def __init__(self) -> None:
-        self.api_url = os.environ.get("CORETHINK_API_URL", "")
-        self.api_key = os.environ.get("CORETHINK_API_KEY", "")
+        import httpx
+
+        api_key = os.environ.get("CORETHINK_API_KEY", "")
+        if not api_key:
+            raise RuntimeError(
+                "CORETHINK_API_KEY is not set. Export the CoreThink API key you "
+                "were issued, e.g. `export CORETHINK_API_KEY=ct-...`."
+            )
+        self.base_url = os.environ.get("CORETHINK_BASE_URL", self.DEFAULT_BASE_URL).rstrip("/")
+        self.effort = os.environ.get("REASONING_EFFORT", "high")
+        self.max_tokens = int(os.environ.get("REASONING_MAX_TOKENS", "32000"))
+        self.client = httpx.Client(
+            base_url=self.base_url,
+            headers={"Authorization": f"Bearer {api_key}"},
+            timeout=httpx.Timeout(600.0, connect=15.0),
+        )
 
     def reason(self, prompt: str) -> ReasoningResult:
-        raise NotImplementedError(
-            "CorethinkBackend is a stub — implement the API call in "
-            "reasoning_traces/backends.py::CorethinkBackend.reason()"
+        import re
+
+        # The proxy forces the model server-side; no model is sent from here.
+        response = self.client.post(
+            "/v1/chat/completions",
+            json={
+                "messages": [{"role": "user", "content": prompt}],
+                "max_tokens": self.max_tokens,
+                "reasoning": {"effort": self.effort},
+            },
         )
+        response.raise_for_status()
+        message = response.json()["choices"][0]["message"]
+
+        # Prefer explicit reasoning fields if the upstream provides them;
+        # otherwise split the DeepSeek-R1-style inline <think>...</think>.
+        trace = message.get("reasoning") or message.get("reasoning_content") or ""
+        content = message.get("content") or ""
+        if not trace and "<think>" in content:
+            m = re.search(r"<think>(.*?)</think>(.*)", content, re.DOTALL)
+            if m:
+                trace, content = m.group(1), m.group(2)
+            else:  # opened but never closed (truncated) — it's all trace
+                trace, content = content.split("<think>", 1)[1], ""
+        return ReasoningResult(trace=trace.strip(), conclusion=content.strip())
 
 
 def get_backend():

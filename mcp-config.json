@@ -5,7 +5,8 @@
       "command": "uvx",
       "args": ["--from", "${CLAUDE_PLUGIN_ROOT}", "reasoning-traces"],
       "env": {
-        "OPENROUTER_API_KEY": "${OPENROUTER_API_KEY}"
+        "REASONING_BACKEND": "corethink",
+        "CORETHINK_API_KEY": "${CORETHINK_API_KEY}"
       },
       "timeout": 600000
     }

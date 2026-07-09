@@ -1,6 +1,6 @@
 [project]
 name = "reasoning-traces"
-version = "0.1.1"
+version = "0.2.0"
 description = "MCP server that gives coding agents a stronger reasoning model's reasoning trace"
 readme = "README.md"
 license = { text = "MIT" }
