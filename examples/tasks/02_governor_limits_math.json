@@ -1,0 +1,13 @@
+{
+  "id": "02_governor_limits_math",
+  "title": "Batch Apex governor-limit math (sync vs async)",
+  "category": "Governor limits",
+  "prompt": "A Batch Apex job processes 12,000 Contact records with a batch size of 200. Inside execute(), the code runs exactly 1 SOQL query and 1 DML update per Contact. Will this job hit a governor limit? Show the math, name the specific limit(s) involved with their numeric values, and if it fails, give the fix.",
+  "reference": "Governor limits are enforced PER execute() transaction (one chunk of 200 records), not across the full 12,000 — the total record count is a distractor. Batch Apex runs in ASYNCHRONOUS context, which has different limits than synchronous: SOQL queries limit = 200 (async; sync is 100), DML statements limit = 150 (same in both). Per execute of 200 Contacts: SOQL = 1 × 200 = 200, which exactly equals the async SOQL limit of 200 — it passes but with zero headroom (any additional query would throw 'Too many SOQL queries: 201'). DML = 1 × 200 = 200, which EXCEEDS the 150 DML-statements limit — the job fails with 'Too many DML statements: 151'. Fix: bulkify — accumulate the updated Contacts in a List and issue a single `update` per execute (1 DML instead of 200), and query needed data in bulk before the loop rather than once per record. Key subtlety: the async SOQL limit is 200, not 100.",
+  "rubric": [
+    "States that limits are per execute() transaction (per 200), not across all 12,000 (12,000 is a distractor)",
+    "Knows Batch Apex is asynchronous and the async SOQL query limit is 200 (not 100)",
+    "Correctly concludes DML fails: 200 DML statements > 150 limit ('Too many DML statements: 151')",
+    "Fix bulkifies to a single DML update (and bulk SOQL) per execute"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "01_trigger_bulkification",
+  "title": "Apex trigger: bulkification & governor limits",
+  "category": "Apex triggers",
+  "prompt": "Review this Apex trigger. It works in the UI for single records but fails when a data load inserts 200+ Opportunities at once. List every reason it fails on a bulk insert, and provide a corrected version.\n\ntrigger OpportunityTrigger on Opportunity (after insert) {\n    for (Opportunity opp : Trigger.new) {\n        Account acc = [SELECT Id, Total_Opp_Amount__c FROM Account WHERE Id = :opp.AccountId];\n        acc.Total_Opp_Amount__c = (acc.Total_Opp_Amount__c == null ? 0 : acc.Total_Opp_Amount__c) + opp.Amount;\n        update acc;\n    }\n}",
+  "reference": "Three bulk-safety failures: (1) SOQL query inside the for loop — 200 opps issues 200 queries and hits the 100-SOQL-queries-per-transaction limit at the 101st. (2) DML (update) inside the loop — hits the 150-DML-statements-per-transaction limit. (3) No aggregation across records for the same Account: if several opps in the batch share an AccountId, each iteration re-queries the pre-loop value and overwrites, so all but the last increment are lost (lost-update bug). Correct approach: collect AccountIds from Trigger.new, query the matching Accounts once into a Map<Id,Account>, accumulate each opp's Amount onto the in-memory Account in the map, then issue a single update on the map's values. Example:\n\ntrigger OpportunityTrigger on Opportunity (after insert) {\n    Set<Id> acctIds = new Set<Id>();\n    for (Opportunity o : Trigger.new) if (o.AccountId != null) acctIds.add(o.AccountId);\n    Map<Id, Account> accts = new Map<Id, Account>([SELECT Id, Total_Opp_Amount__c FROM Account WHERE Id IN :acctIds]);\n    for (Opportunity o : Trigger.new) {\n        if (o.AccountId == null) continue;\n        Account a = accts.get(o.AccountId);\n        a.Total_Opp_Amount__c = (a.Total_Opp_Amount__c == null ? 0 : a.Total_Opp_Amount__c) + (o.Amount == null ? 0 : o.Amount);\n    }\n    update accts.values();\n}",
+  "rubric": [
+    "Identifies SOQL-inside-loop as a governor-limit failure (100 queries/transaction)",
+    "Identifies DML-inside-loop as a governor-limit failure (150 DML statements/transaction)",
+    "Identifies the lost-update bug when multiple opps share the same AccountId",
+    "Corrected code queries accounts once (IN :set), accumulates in a Map, and does a single update"
+  ]
+}

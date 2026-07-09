@@ -1,0 +1,13 @@
+{
+  "id": "03_soql_semijoin",
+  "title": "SOQL: Accounts with zero Opportunities",
+  "category": "SOQL",
+  "prompt": "Write a SINGLE SOQL query that returns only the Accounts that have no related Opportunity records (zero child Opportunities). Explain why the common first attempts (a child relationship subquery, or a JOIN) do not directly satisfy 'a single query that returns only the childless Accounts'.",
+  "reference": "Use a NOT IN semi-join against the child object's lookup field:\n\nSELECT Id, Name FROM Account WHERE Id NOT IN (SELECT AccountId FROM Opportunity)\n\nWhy the common attempts fail: (1) SOQL has no SQL-style JOIN, so you cannot LEFT JOIN and filter on a null child. (2) A child relationship subquery — SELECT Id, (SELECT Id FROM Opportunities) FROM Account — returns ALL accounts (each with its list of child opps), so it does not filter to only childless ones; you'd have to inspect the child list in Apex afterward, which is not a single query that returns only the answer. (3) You cannot filter directly on a child aggregate/count in the WHERE of the parent query. The NOT IN semi-join is the correct single-query solution. (Opportunities with a null AccountId simply aren't in the subquery set and don't affect correctness.)",
+  "rubric": [
+    "Provides WHERE Id NOT IN (SELECT AccountId FROM Opportunity) (a semi-join)",
+    "Explains SOQL has no JOIN so a relational LEFT-JOIN approach isn't available",
+    "Explains a child relationship subquery returns ALL accounts, not just childless ones",
+    "Single query returns only the childless Accounts (no post-filtering in Apex required)"
+  ]
+}

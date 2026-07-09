@@ -1,0 +1,13 @@
+{
+  "id": "04_batch_stateful",
+  "title": "Batch Apex: wrong running total",
+  "category": "Batch Apex",
+  "prompt": "This Batch Apex is supposed to sum the Amount of every Opportunity it processes and email the grand total in finish(). Instead it emails a total that is far too small (roughly only the last chunk, or zero). Explain the root cause and give the exact fix.\n\nglobal class SumOppBatch implements Database.Batchable<sObject> {\n    global Decimal grandTotal = 0;\n    global Database.QueryLocator start(Database.BatchableContext bc) {\n        return Database.getQueryLocator('SELECT Amount FROM Opportunity');\n    }\n    global void execute(Database.BatchableContext bc, List<Opportunity> scope) {\n        for (Opportunity o : scope) grandTotal += (o.Amount == null ? 0 : o.Amount);\n    }\n    global void finish(Database.BatchableContext bc) {\n        // sends an email containing grandTotal\n    }\n}",
+  "reference": "Root cause: the class does not implement Database.Stateful. By default, member variable state is NOT preserved across execute() invocations in Batch Apex — Salesforce constructs/deserializes a fresh instance of the batch class for each chunk (and again for finish()), so `grandTotal` resets to 0 at the start of every execute(). The accumulation therefore never carries across chunks, and finish() sees a fresh instance where grandTotal is 0 (or only reflects state that happens not to have been preserved). Fix: implement the Database.Stateful marker interface so instance member variables retain their values across transactions:\n\nglobal class SumOppBatch implements Database.Batchable<sObject>, Database.Stateful { ... }\n\nWith Database.Stateful, grandTotal persists across all execute() calls and finish() sees the correct grand total.",
+  "rubric": [
+    "Identifies the missing Database.Stateful interface as the root cause",
+    "Explains that without it, member state is reset for each execute() (fresh instance per chunk)",
+    "Fix is to implement Database.Stateful (marker interface) on the class",
+    "Notes finish() also sees the accumulated state only when Stateful is implemented"
+  ]
+}

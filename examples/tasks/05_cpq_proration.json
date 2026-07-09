@@ -1,0 +1,13 @@
+{
+  "id": "05_cpq_proration",
+  "title": "CPQ: prorated + discounted add-on",
+  "category": "CPQ / pricing math",
+  "prompt": "A customer has an existing annual subscription with a list price of $12,000/year. Mid-term, they add a co-terminated add-on product so it expires with the main subscription. There are 73 days remaining in the 365-day annual term. The add-on's list price is $3,000/year, and a 15% discount applies to the add-on. What is the prorated, discounted amount to charge now for the add-on? Show each step and round to the nearest cent.",
+  "reference": "The $12,000 main-subscription price is a distractor — it does not enter the add-on charge. Steps: (1) Proration factor = days remaining / term days = 73 / 365 = 0.2. (2) Prorated add-on list = $3,000 × 0.2 = $600.00. (3) Apply 15% discount = $600.00 × (1 − 0.15) = $600.00 × 0.85 = $510.00. Answer: $510.00. (Proration and discount are both multiplicative, so order doesn't matter: 3000 × 0.2 × 0.85 = 510.) Common errors to avoid: using a 360-day year, involving the $12,000, or applying the discount to the full $3,000 before prorating in a way that changes the result.",
+  "rubric": [
+    "Final answer is $510.00",
+    "Uses proration factor 73/365 = 0.2 on the $3,000 add-on (not the $12,000)",
+    "Applies the 15% discount correctly (× 0.85)",
+    "Ignores the $12,000 main subscription as a distractor and shows the steps"
+  ]
+}
